@@ -1,0 +1,7 @@
+
+buildresults/**
+
+# Meson subprojects
+**/subprojects/**
+!**/subprojects/*.wrap
+!**/subprojects/packagefiles/

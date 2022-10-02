@@ -1,0 +1,4 @@
+[wrap-git]
+url=https://github.com/mpaland/printf
+revision=d3b9846
+patch_directory=printf
