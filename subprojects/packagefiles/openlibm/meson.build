@@ -1,4 +1,4 @@
-project('openlibm',
+project('openlibm-patch',
 	'c'
 )
 

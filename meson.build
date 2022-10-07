@@ -4,7 +4,7 @@ project('Embedded Artistry libc',
 		'c_std=c11'
 	],
 	license: 'MIT',
-	meson_version: '>=0.63.0',
+	meson_version: '>=0.56.0',
 	version: '1.0')
 
 ###############
