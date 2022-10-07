@@ -24,3 +24,18 @@ cmocka_dep = dependency('cmocka', required: false, fallback: ['cmocka', 'cmocka_
 
 subdir('src')
 subdir('test')
+
+###############
+# Run Targets #
+###############
+
+# From the root directory: ninja -C buildresults tree
+run_target('tree',
+	command: [
+		'tools/tree.sh'
+	]
+)
+
+run_target('clear-test-results',
+	command: meson.project_source_root() + '/tools/clear_test_xml.sh'
+)
