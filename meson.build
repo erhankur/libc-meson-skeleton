@@ -1,7 +1,10 @@
 project('Embedded Artistry libc',
-	'c',
+	['c', 'cpp'],
 	default_options : [
-		'c_std=c11'
+		'warning_level=3',
+		'werror=false',
+		'c_std=c11',
+		'cpp_std=c++11',
 	],
 	license: 'MIT',
 	meson_version: '>=0.56.0',
