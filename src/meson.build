@@ -238,9 +238,23 @@ libc_standalone_files = [
 libc_includes = include_directories('../include')
 arch_specific_includes = include_directories('../arch/x86_64/include')
 
+libc_compile_flags = c_compiler.get_supported_arguments(
+	'-nostdinc', # Don't include standard include paths - we don't want system headers
+)
+if disable_unimplemented_apis
+	# Note: This needs to be set for both libc compilation + dependency compile_args
+	libc_compile_flags += '-DDISABLE_UNIMPLEMENTED_LIBC_APIS'
+endif
+
+if enable_gnu_src
+	# Note: This needs to be set for both libc compilation + dependency compile_args
+	libc_compile_flags += '-D_GNU_SOURCE'
+endif
+
 libc_native = static_library(
 	'c_native',
 	libc_common_files + libc_native_files,
+	c_args: libc_compile_flags,
 	include_directories: [libc_includes, arch_specific_includes],
 	dependencies: [libprintf_dep, openlibm_dep],
 )
@@ -252,5 +266,6 @@ libc_native_dep = declare_dependency(
 		openlibm_includes,
 		printf_includes
 	],
+	compile_args: libc_compile_flags,
 	link_with: libc_native,
 )

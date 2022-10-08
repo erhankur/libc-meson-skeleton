@@ -70,9 +70,15 @@ libc_test_files = files(
 ###############
 # Test Target #
 ###############
+
+libc_test_flags = c_compiler.get_supported_arguments(
+	'-Wno-unused-parameter',
+)
+
 libc_tests = executable('libc_test',
 	libc_test_files,
 	dependencies: [cmocka_dep, libc_native_dep],
+	c_args: libc_test_flags,
 )
 
 #############################

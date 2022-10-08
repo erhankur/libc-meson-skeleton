@@ -5,10 +5,38 @@ project('Embedded Artistry libc',
 		'werror=false',
 		'c_std=c11',
 		'cpp_std=c++11',
+		#'buildtype=custom',
+		'debug=true',
+		'optimization=g',
 	],
 	license: 'MIT',
 	meson_version: '>=0.56.0',
 	version: '1.0')
+
+
+#################
+# Build Options #
+#################
+
+disable_unimplemented_apis = get_option('hide-unimplemented-libc-apis')
+enable_gnu_src = get_option('enable-gnu-extensions')
+build_type = get_option('build')
+
+if build_type == 'debug'
+	if(meson.is_subproject())
+		add_project_arguments('-DDEBUG', '-DGDTOA_HOST_DEBUG', '-O0', '-g',
+			language: ['c', 'cpp'])
+	else
+		add_global_arguments('-DDEBUG', '-DGDTOA_HOST_DEBUG', '-O0', '-g',
+			language: ['c', 'cpp'])
+	endif
+elif build_type == 'release'
+	if(meson.is_subproject())
+		add_project_arguments('-DNDEBUG', '-O2', language: ['c', 'cpp'])
+	else
+		add_global_arguments('-DNDEBUG', '-O2', language: ['c', 'cpp'])
+	endif
+endif
 
 ###############
 # Subprojects #
@@ -24,6 +52,23 @@ openlibm_includes = openlibm_subproject.get_variable('openlibm_includes')
 
 cmocka_subproject = subproject('cmocka')
 cmocka_dep = dependency('cmocka', required: false, fallback: ['cmocka', 'cmocka_dep'])
+
+# Global Project Flags and variables
+
+c_compiler = meson.get_compiler('c')
+
+add_project_arguments(
+  c_compiler.get_supported_arguments(
+    '-Wno-unknown-pragmas',
+    '-Wno-nonnull',
+    '-Wno-nonnull-compare',
+  ),
+  language: 'c'
+)
+
+#######################
+# Process Source Tree #
+#######################
 
 subdir('src')
 subdir('test')
