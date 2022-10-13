@@ -1,0 +1,8 @@
+option('hide-unimplemented-libc-apis', type: 'boolean', value: false, 
+	description: 'Make unimplemented libc functions invisible to the compiler.', 
+	yield: true)
+
+option('enable-gnu-extensions', type: 'boolean', value: false, yield: true)
+
+option('build', type: 'combo', choices: ['debug', 'release'], 
+    value: 'debug', yield: true)

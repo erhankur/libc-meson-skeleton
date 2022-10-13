@@ -23,4 +23,16 @@ libprintf_dep = declare_dependency(
 	link_with: libprintf,
 )
 
+libprintf_native = static_library(
+	'printf_native',
+    printf_files,
+    include_directories: printf_includes,
+    native: true
+)
+
+libprintf_native_dep = declare_dependency(
+	include_directories: printf_includes,
+	link_with: libprintf_native,
+)
+
 subdir('test')

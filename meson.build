@@ -3,11 +3,13 @@ project('Embedded Artistry libc',
 	default_options : [
 		'warning_level=3',
 		'werror=false',
-		'c_std=c11',
-		'cpp_std=c++11',
 		#'buildtype=custom',
 		'debug=true',
 		'optimization=g',
+		# `build.*` options affect `native: true targets`
+		# plain options affect `native: false` targets.
+		'c_std=c11', 'build.c_std=c11',
+		'cpp_std=c++17', 'build.cpp_std=c++17',
 	],
 	license: 'MIT',
 	meson_version: '>=0.56.0',
@@ -44,6 +46,7 @@ endif
 
 printf_subproject = subproject('printf')
 libprintf_dep = printf_subproject.get_variable('libprintf_dep')
+libprintf_native_dep = printf_subproject.get_variable('libprintf_native_dep')
 printf_includes = printf_subproject.get_variable('printf_includes')
 
 openlibm_subproject = subproject('openlibm')
@@ -51,7 +54,7 @@ openlibm_dep = openlibm_subproject.get_variable('openlibm_dep')
 openlibm_includes = openlibm_subproject.get_variable('openlibm_includes')
 
 cmocka_subproject = subproject('cmocka')
-cmocka_dep = dependency('cmocka', required: false, fallback: ['cmocka', 'cmocka_dep'])
+cmocka_native_dep = dependency('cmocka', required: false, fallback: ['cmocka', 'cmocka_native_dep'])
 
 # Global Project Flags and variables
 
