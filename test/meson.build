@@ -71,7 +71,7 @@ libc_test_files = files(
 # Test Target #
 ###############
 
-libc_test_flags = c_compiler.get_supported_arguments(
+libc_test_flags = native_c_compiler.get_supported_arguments(
 	'-Wno-unused-parameter',
 )
 

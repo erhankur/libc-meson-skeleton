@@ -25,9 +25,10 @@ enable_gnu_src = get_option('enable-gnu-extensions')
 build_type = get_option('build')
 
 if build_type == 'debug'
+	debug_flags = ['-DDEBUG', '-DGDTOA_HOST_DEBUG', '-O0', '-g']
 	if(meson.is_subproject())
-		add_project_arguments('-DDEBUG', '-DGDTOA_HOST_DEBUG', '-O0', '-g',
-			language: ['c', 'cpp'])
+		add_project_arguments(debug_flags, language: ['c', 'cpp'])
+		add_project_arguments(debug_flags, language: ['c', 'cpp'], native: true)
 	else
 		add_global_arguments('-DDEBUG', '-DGDTOA_HOST_DEBUG', '-O0', '-g',
 			language: ['c', 'cpp'])
@@ -57,16 +58,24 @@ cmocka_subproject = subproject('cmocka')
 cmocka_native_dep = dependency('cmocka', required: false, fallback: ['cmocka', 'cmocka_native_dep'])
 
 # Global Project Flags and variables
+native_c_compiler = meson.get_compiler('c', native: true)
+host_c_compiler = meson.get_compiler('c', native: false)
 
-c_compiler = meson.get_compiler('c')
+project_arguments = [
+	'-Wno-unknown-pragmas',
+	'-Wno-nonnull',
+	'-Wno-nonnull-compare'
+]
 
 add_project_arguments(
-  c_compiler.get_supported_arguments(
-    '-Wno-unknown-pragmas',
-    '-Wno-nonnull',
-    '-Wno-nonnull-compare',
-  ),
-  language: 'c'
+	host_c_compiler.get_supported_arguments(project_arguments),
+	language: 'c'
+)
+
+add_project_arguments(
+	native_c_compiler.get_supported_arguments(project_arguments),
+	language: 'c',
+	native: true
 )
 
 #######################
