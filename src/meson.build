@@ -236,7 +236,11 @@ libc_standalone_files = [
 
 # .. is used here because we are in the src/ directory, and include/ is one directory up
 libc_includes = include_directories('../include')
-arch_specific_includes = include_directories('../arch/x86_64/include')
+
+build_machine_arch_path = '../arch/' + build_machine.cpu_family() + '/include'
+host_machine_arch_path = '../arch/' + host_machine.cpu_family() + '/include'
+build_machine_arch_include = include_directories(build_machine_arch_path)
+host_machine_arch_include = include_directories(host_machine_arch_path)
 
 libc_compile_flags = c_compiler.get_supported_arguments(
 	'-nostdinc', # Don't include standard include paths - we don't want system headers
@@ -255,7 +259,7 @@ libc_native = static_library(
 	'c_native',
 	libc_common_files + libc_native_files,
 	c_args: libc_compile_flags,
-	include_directories: [libc_includes, arch_specific_includes],
+	include_directories: [libc_includes, build_machine_arch_include],
 	dependencies: [libprintf_native_dep, openlibm_dep],
 	native: true
 )
@@ -263,7 +267,7 @@ libc_native = static_library(
 libc_native_dep = declare_dependency(
 	include_directories: [
 		libc_includes,
-		arch_specific_includes,
+		build_machine_arch_include,
 		openlibm_includes,
 		printf_includes
 	],
